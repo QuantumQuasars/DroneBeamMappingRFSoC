@@ -1,5 +1,10 @@
 # DroneBeamMappingRFSoC
+
 A drone with a wide-band RFSoC-based transmitter and an RFSoC-based receiver to map the antenna pattern of a radio telescope
+
+From Physics Professor [Jason Gallicchio](https://www.hmc.edu/physics/faculty-staff/gallicchio/)'s Harvey Mudd Research Group
+
+<img src="./drone_in_air.jpg" width="50%"/>
 
 ## Abstract
 
@@ -25,6 +30,12 @@ I made the following changes:
 The python also started with the RFSoC-MTS example notebook [rfsocMTS.ipynb](https://github.com/Xilinx/RFSoC-MTS/blob/main/boards/RFSoC4x2/notebooks/rfsocMTS.ipynb) with additions for my verilog modifications above, along with generation of the custom chirp --- specifically a [Zadoff-Chu (ZC) sequence](https://en.wikipedia.org/wiki/Zadoff%E2%80%93Chu_sequence) --- and FFT processing of the accumulated dump.
 
 When used to take data on a drone, the series of accumulated dumps are stored with timestamps for later combination with the logs from the PX4 flight control software.
+
+## Drone Platform and Parameter Configuration
+
+Our platform is a [Tarot X6 Hexacopter](https://www.foxtechfpv.com/tarot-x6-hexacopter-frame-p-1945.html) with a [Cube Orange](https://docs.px4.io/main/en/flight_controller/cubepilot_cube_orange.html) running [PX4](https://docs.px4.io/). We get accurate yaw orientation from dual [SparkFun uBlox ZED-F9P](https://www.sparkfun.com/sparkfun-gps-rtk-sma-breakout-zed-f9p-qwiic.html) units.
+
+Our custom payload includes an [RFSoC 4x2](https://www.realdigital.org/hardware/rfsoc-4x2) board, a [Aaronia BicoLOG 30100](https://aaronia.com/en/emv-antenne-bicolog-30100) antenna, a [Leo Bodnar LBE-1421 GPSDO](https://www.leobodnar.com/shop/index.php?main_page=product_info&products_id=399), and various RF filters and amplifiers.
 
 ## Drone flight path planning
 
