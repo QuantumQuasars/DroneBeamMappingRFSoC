@@ -1,5 +1,7 @@
 # DroneBeamMappingRFSoC
 
+Wide-Band Antenna Pattern Mapping with an RFSoC on a Drone
+
 A drone with a wide-band RFSoC-based transmitter and an RFSoC-based receiver to map the antenna pattern of a radio telescope
 
 From Physics Professor [Jason Gallicchio](https://www.hmc.edu/physics/faculty-staff/gallicchio/)'s Harvey Mudd Research Group
