@@ -18,12 +18,18 @@ I made the following changes:
 * We don't need to output or capture the entire array. Instead, you can write a `nSamples` in python which will cause the output to repeat after fewer samples. It must remain a multiple of 16 because the DACs are fed in parallel in groups of 16 samples. This one change is all that is needed for the transmitter, and it can be implimented entire by editing the block diagram in Vivado.
 * For the receiver, I don't do any channelization or cross correlation in Verilog. Instead, I implimented a simple [AccumulateAndDump.v](AccumulateAndDump.v) Verilog block. This is an int32 array at least `nSamples` long that gets filled up to the number of samples specified (again a multiple of 16, often lastnig a few µs), after which the next `nSamples` get added to the first group. The process repeats `nAccumulate` times (often lasting 1-100 ms). Then the whole array gets dumped to a python-visible memory location to be read out while the next sample starts the following accumulation cycle, all without gaps. There is a dump counter, overflow flags, and other flags to let python know if it was too slow and missed a dump.
 
+<img src="./Screenshot_MTS_heir_dac_play_numSampleVectors.png" width="50%"/>
+
+<img src="./ScreenshotAccumulateAndDump.png" width="50%"/>
+
 The python also started with the RFSoC-MTS example notebook [rfsocMTS.ipynb](https://github.com/Xilinx/RFSoC-MTS/blob/main/boards/RFSoC4x2/notebooks/rfsocMTS.ipynb) with additions for my verilog modifications above, along with generation of the custom chirp --- specifically a [Zadoff-Chu (ZC) sequence](https://en.wikipedia.org/wiki/Zadoff%E2%80%93Chu_sequence) --- and FFT processing of the accumulated dump.
 
 When used to take data on a drone, the series of accumulated dumps are stored with timestamps for later combination with the logs from the PX4 flight control software.
 
 ## Drone flight path planning
 
+
+## Beam Mapping Analysis Notebook
 
 # Notes
 
