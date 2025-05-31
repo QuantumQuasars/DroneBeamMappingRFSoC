@@ -8,9 +8,18 @@ From Physics Professor [Jason Gallicchio](https://www.hmc.edu/physics/faculty-st
 
 <img src="./drone_in_air.jpg" width="50%"/>
 
-## Abstract
+## Abstract / Summary / Introduction
 
-We designed and tested a drone with a wide-band transmitter (down to 30 MHz up to to 1.8 GHz) to measure the complex antenna pattern of radio telescopes. We basically split a VNA in half and flew one half on a drone. Radio telescopes at sub GHz frequencies are often not mechanically steerable. They are composed of arrays of dipoles, troughs, or dishes "pointing up". This makes it challenging to know the antenna pattern of each feed when ground and mechanical conditions cannot perfectly be simulated. The far sidelobes are especially challenging to measure, but must be known accurately to measure highly-redshifted hydrogen. Often such telescopes (e.g. CHIME) are used as an interferometer, with a fixed number of channels (e.g. 1024) across their bandwidth (e.g. 400-800 MHz) leading to a fixed FFT repeating time window (e.g. 2.56 µs). Using a Xilinx RFSoC 4x2 board on a drone, we generate a chirp, sampled at 4 GSPS, which spans exactly this bandwidth and repeats at exactly this FFT time window. This allows us to use the existing correlation infrastructure to measure both the magnitude and phase of the antenna response in each spectral bin and in every direction as the drone flies a spiral hemisphere pattern. In the development phase, we measured the beam pattern of a dual-polarized 1-meter parabolic dish. This required us to implement our own 2-input RFSoC receiver in Verilog and python, with flexibility to mimic the bandwidth, number of spectral channels, and repeating time window of many sub 2 GHz radio telescopes that are deployed or planned.
+We designed and tested a drone with a wide-band transmitter (down to 30 MHz up to to 1.8 GHz) to measure the complex antenna pattern of radio telescopes. We basically split a VNA in half and flew one half on a drone. Radio telescopes at sub GHz frequencies are often not mechanically steerable. They are composed of arrays of dipoles, troughs, or dishes "pointing up". This makes it challenging to know the antenna pattern of each feed when ground and mechanical conditions cannot perfectly be simulated. The far sidelobes are especially challenging to measure, but must be known accurately to measure highly-redshifted hydrogen. Often such telescopes (e.g. CHIME) are used as an interferometer, with a fixed number of channels (e.g. 1024) across their bandwidth (e.g. 400-800 MHz) leading to a fixed FFT repeating time window (e.g. 2.56 µs).
+
+Using a Xilinx RFSoC 4x2 board on a drone, we generate a chirp, sampled at 4 GSPS, which spans exactly this bandwidth and repeats at exactly this FFT time window. This allows us to use the existing correlation infrastructure to measure both the magnitude and phase of the antenna response in each spectral bin and in every direction as the drone flies a spiral hemisphere pattern. Because our repeating transmissions and reception window are synchronized, we can average noise and interference in either the time or frequency domain. Anything that's not exactly synchronized will average down. We can then do the Fourier and correlation stuff later in python.
+
+In the development phase, we measured the beam pattern of a dual-polarized 1-meter parabolic dish. This required us to implement our own 2-input RFSoC receiver in Verilog and python, with flexibility to mimic the bandwidth, number of spectral channels, and repeating time window of many sub 2 GHz radio telescopes that are deployed or planned.
+
+
+<img src="./payload_RFSoC_antenna_from_above.jpg" width="45%"/>
+<img src="./payload_RFSoC_antenna_from_side.jpg" width="45%"/>
+
 
 ## Overview of FPGA Verilog and Python
 
