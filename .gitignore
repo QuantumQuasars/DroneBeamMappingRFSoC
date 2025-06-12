@@ -172,3 +172,9 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+
+
+# Specific GNURadio Generated Files
+Zadoff_Chu_Demonstrator.py
+Zadoff_Chu_Demonstrator_zc_sequence_code.py
+

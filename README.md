@@ -20,6 +20,31 @@ In the development phase, we measured the beam pattern of a dual-polarized 1-met
 <img src="./payload_RFSoC_antenna_from_above.jpg" width="45%"/>
 <img src="./payload_RFSoC_antenna_from_side.jpg" width="45%"/>
 
+Our portable, pretend radio telescope for on-campus testing:
+
+<img src="./dish_antenna_inside.jpg" width="45%"/>
+
+## GNURadio Prototype
+
+The GNURadio prototype is [Zadoff_Chu_Demonstrator.grc](./Zadoff_Chu_Demonstrator.grc) and includes a simple embedded python function definition to generate the chirp: a [Zadoff Chu Sequence](https://en.wikipedia.org/wiki/Zadoff%E2%80%93Chu_sequence) at startup.
+
+The GNURadio prototype, by default, runs on a USRP B210 at a complex sample rate of 25 MSPS and therefore a bandwidth of 25 MHz, centered around 915 MHz (adjustable with a slider).  This compares to the RFSoC bandwidth of 2 GHz --- a factor of 80 wider. The signal processing math is otherwise identical, though no averaging is currently being done in the GNURadio prototype.
+
+<img src="./Photo_GNURadio_Zadoff_Chu_Demonstrator_flowgraph.jpg" width="90%"/>
+
+<img src="./Screenshot_GNURadio_Zadoff_Chu_Demonstrator_flowgraph.png" width="90%"/>
+
+<img src="./Screenshot_GNURadio_Zadoff_Chu_Demonstrator_running.png" width="90%"/>
+
+
+The GNURadio prototype only took an hour or two to make, but demonstrates:
+* You can see the correlation go down as you make the polarization of the antennas less parallel.
+* You can see the phase change when you move the antennas *even a fraction of a centimeter* closer or farther away.
+* You change the central frequency to operate at the edge of the bandpass filter and see the cutoff in the cross spectrum.
+
+Unfortunately, there are challenges with the hardware:
+* The DC compensation screws up the spectrum around the carrier. I should only transmit well within only the upper or lower half of the B210's band.
+* Every time I get an underrun, the offset between transmit and receive resets to some arbitrary number of samples. I can manually "tune it out" each time this happens.
 
 ## Overview of FPGA Verilog and Python
 
