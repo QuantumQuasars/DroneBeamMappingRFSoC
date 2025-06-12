@@ -6,7 +6,7 @@ A drone with a wide-band RFSoC-based transmitter and an RFSoC-based receiver to 
 
 From Physics Professor [Jason Gallicchio](https://www.hmc.edu/physics/faculty-staff/gallicchio/)'s Harvey Mudd Research Group
 
-<img src="./drone_in_air.jpg" width="50%"/>
+<img src="images/drone_in_air.jpg" width="50%"/>
 
 ## Abstract / Summary / Introduction
 
@@ -17,12 +17,12 @@ Using a Xilinx RFSoC 4x2 board on a drone, we generate a chirp, sampled at 4 GSP
 In the development phase, we measured the beam pattern of a dual-polarized 1-meter parabolic dish. This required us to implement our own 2-input RFSoC receiver in Verilog and python, with flexibility to mimic the bandwidth, number of spectral channels, and repeating time window of many sub 2 GHz radio telescopes that are deployed or planned.
 
 
-<img src="./payload_RFSoC_antenna_from_above.jpg" width="45%"/>
-<img src="./payload_RFSoC_antenna_from_side.jpg" width="45%"/>
+<img src="images/payload_RFSoC_antenna_from_above.jpg" width="45%"/>
+<img src="images/payload_RFSoC_antenna_from_side.jpg" width="45%"/>
 
 Our portable, pretend radio telescope for on-campus testing:
 
-<img src="./dish_antenna_inside.jpg" width="45%"/>
+<img src="images/dish_antenna_inside.jpg" width="45%"/>
 
 ## GNURadio Prototype
 
@@ -30,11 +30,11 @@ The GNURadio prototype is [Zadoff_Chu_Demonstrator.grc](./Zadoff_Chu_Demonstrato
 
 The GNURadio prototype, by default, runs on a USRP B210 at a complex sample rate of 25 MSPS and therefore a bandwidth of 25 MHz, centered around 915 MHz (adjustable with a slider).  This compares to the RFSoC bandwidth of 2 GHz --- a factor of 80 wider. The signal processing math is otherwise identical, though no averaging is currently being done in the GNURadio prototype.
 
-<img src="./Photo_GNURadio_Zadoff_Chu_Demonstrator_flowgraph.jpg" width="90%"/>
+<img src="images/Photo_GNURadio_Zadoff_Chu_Demonstrator_flowgraph.jpg" width="90%"/>
 
-<img src="./Screenshot_GNURadio_Zadoff_Chu_Demonstrator_flowgraph.png" width="90%"/>
+<img src="images/Screenshot_GNURadio_Zadoff_Chu_Demonstrator_flowgraph.png" width="90%"/>
 
-<img src="./Screenshot_GNURadio_Zadoff_Chu_Demonstrator_running.png" width="90%"/>
+<img src="images/Screenshot_GNURadio_Zadoff_Chu_Demonstrator_running.png" width="90%"/>
 
 
 The GNURadio prototype only took an hour or two to make, but demonstrates:
@@ -59,9 +59,9 @@ I made the following changes:
 * We don't need to output or capture the entire array. Instead, you can write a `nSamples` in python which will cause the output to repeat after fewer samples. It must remain a multiple of 16 because the DACs are fed in parallel in groups of 16 samples. This one change is all that is needed for the transmitter, and it can be implimented entire by editing the block diagram in Vivado.
 * For the receiver, I don't do any channelization or cross correlation in Verilog. Instead, I implimented a simple [AccumulateAndDump.v](AccumulateAndDump.v) Verilog block. This is an int32 array at least `nSamples` long that gets filled up to the number of samples specified (again a multiple of 16, often lastnig a few µs), after which the next `nSamples` get added to the first group. The process repeats `nAccumulate` times (often lasting 1-100 ms). Then the whole array gets dumped to a python-visible memory location to be read out while the next sample starts the following accumulation cycle, all without gaps. There is a dump counter, overflow flags, and other flags to let python know if it was too slow and missed a dump.
 
-<img src="./Screenshot_MTS_heir_dac_play_numSampleVectors.png" width="50%"/>
+<img src="images/Screenshot_MTS_heir_dac_play_numSampleVectors.png" width="50%"/>
 
-<img src="./ScreenshotAccumulateAndDump.png" width="50%"/>
+<img src="images/ScreenshotAccumulateAndDump.png" width="50%"/>
 
 The python also started with the RFSoC-MTS example notebook [rfsocMTS.ipynb](https://github.com/Xilinx/RFSoC-MTS/blob/main/boards/RFSoC4x2/notebooks/rfsocMTS.ipynb) with additions for my verilog modifications above, along with generation of the custom chirp --- specifically a [Zadoff-Chu (ZC) sequence](https://en.wikipedia.org/wiki/Zadoff%E2%80%93Chu_sequence) --- and FFT processing of the accumulated dump.
 
