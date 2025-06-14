@@ -39,11 +39,12 @@ The GNURadio prototype, by default, runs on a USRP B210 at a complex sample rate
 
 The GNURadio prototype only took an hour or two to make, but demonstrates:
 * You can see the correlation go down as you make the polarization of the antennas less parallel.
-* You can see the phase change when you move the antennas *even a fraction of a centimeter* closer or farther away.
+* You can see the phase change when you move the antennas *even a fraction of a centimeter* closer or farther away (for a 30 cm wavelength).
 * You change the central frequency to operate at the edge of the bandpass filter and see the cutoff in the cross spectrum.
+* I even do a version of the RFSoC's accumulate and dump in the time domain, though in the GNU Radi prototype, it's really an IIR filter with a slider as a parameter that, by default, averages around the last 100 capture windows with exponentially-falling weights in the past.
 
 Unfortunately, there are challenges with the hardware:
-* The DC compensation screws up the spectrum around the carrier. I should only transmit well within only the upper or lower half of the B210's band.
+* The DC compensation screws up the spectrum around the carrier. The rolloff near the edges makes that response not ideal. I should only transmit well within only the upper or lower half of the B210's band.
 * Every time I get an underrun, the offset between transmit and receive resets to some arbitrary number of samples. I can manually "tune it out" each time this happens.
 
 ## Overview of FPGA Verilog and Python
