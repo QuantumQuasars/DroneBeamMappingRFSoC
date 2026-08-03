@@ -256,7 +256,8 @@ module AccumulateAndDump #(parameter DWIDTH = 256, parameter MEM_SIZE_BYTES = 65
       accumulator_addr       <= 0;  // Fast counter
       accumulations_count    <= 0;  // Medium counter
       sequence_number        <= 0;  // Slow counter, exposed to software through GPIO. Except here, this only ever increments
-      maximum_row_address    <= NUMBER_OF_ROWS-1;  // TODO: calculate this from samples_in_window: samples_in_window/SAMPLES_PER_TRANSFER rounded down. Maybe samples_in_window[31:4]-1
+      // maximum_row_address    <= NUMBER_OF_ROWS-1;  // TODO: calculate this from samples_in_window: samples_in_window/SAMPLES_PER_TRANSFER rounded down. Maybe samples_in_window[31:4]-1
+      maximum_row_address    <= samples_in_window[31:4]-1;
       maximum_accumulations  <= num_accumulations-1;
       
       // tell the external BRAM that we're not writing or reading:
@@ -309,11 +310,12 @@ module AccumulateAndDump #(parameter DWIDTH = 256, parameter MEM_SIZE_BYTES = 65
             //dropped_count  <= accumulator[accumulator_addr][31:0]; // DEBUG: just to see something at all
             //dropped_count <= temp_sum[31:0];  // DEBUG: just to see the result of an accumulation
             bram_wdata <= temp_sum;
-            bram_addr  <= bram_addr + ADDR_INC;  // go to the next address
+            bram_addr <= bram_addr + ADDR_INC;  // Once we start writing, we will start adding to the output BRAM address, which was waiting at -ADDR_INC
             bram_we    <= {DWIDTH*2/8{1'b1}};  // turn on write enable for each byte.
             bram_en    <= 1'b1;  // Enable the BRAM
           end else begin  // not writing
-            bram_addr <= 0;  // hang out at address 0 until we are ready to write
+            //bram_addr <= 0;  // hang out at address 0 until we are ready to write. Replaced with below.
+            bram_addr <= -ADDR_INC;  // hang out at address -ADDR_INC until the first write, when we'll make it 0.
             bram_we   <= {DWIDTH*2/8{1'b0}};  // turn off write enable for each byte.
             bram_en   <= 1'b0;  // turn off the BRAM enable.
           end
